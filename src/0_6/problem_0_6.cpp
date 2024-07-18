@@ -6,30 +6,31 @@ using namespace std;
 
 pair<int,int> count_long_subarrays(vector<int> input)
 {
-    int longestSubarrayLength = 0;
-    int longestSubarrayCount = 0;
-    
-    for (auto current = input.begin(); current < input.end();)
+    // base case, shortest possible subarray given constraints is 1.
+    unsigned int longestSubarrayLength = 1;
+    unsigned int longestSubarrayCount = 1;
+    unsigned int currentSubarrayLength = 1;
+        
+    for (unsigned int i = 1; i < input.size(); ++i)
     {
-        cout << "starting new subarray:";
-        int prev = INT_MIN;
-        int currentSubarrayLength = 0;
-        while (current < input.end() && *current > prev)
+        if (input[i-1] < input[i])
         {
-            cout << *current << ", ";
-            prev = *current;
-            ++currentSubarrayLength;
-            ++current;
+            currentSubarrayLength++;
         }
-        cout << endl << "subarray length is: " << currentSubarrayLength << endl;
-        if(currentSubarrayLength > longestSubarrayLength){
-                longestSubarrayLength = currentSubarrayLength;
-                longestSubarrayCount = 1;
-                cout << "longest subarray is length: " << longestSubarrayLength;        
-        } else if (currentSubarrayLength == longestSubarrayLength){
-            ++longestSubarrayCount;
+        else 
+        {
+            currentSubarrayLength = 1;
         }
-        cout << "number of longest subarray is: " << longestSubarrayCount << endl;
+
+        if (currentSubarrayLength > longestSubarrayLength)
+        {
+            longestSubarrayLength = currentSubarrayLength;
+            longestSubarrayCount = 1;
+        } 
+        else if (currentSubarrayLength == longestSubarrayLength)
+        {
+            longestSubarrayCount++;
+        }
     }
     return pair<int,int>(longestSubarrayLength, longestSubarrayCount);
 }

@@ -123,26 +123,26 @@ public:
 shared_ptr<linked_list_node<int>> reverse_recursive(shared_ptr<linked_list_node<int>> p_node)
 {
     //cout << "reversing order of " << p_node->value << endl;
-    if (p_node->next == nullptr) // base case: there is no next node.
+    if (p_node->next == nullptr)            // base case: there is no next node. return this as our old tail element.
         return p_node;
-    auto next = p_node->next;
-    auto tail = reverse_recursive(next);
-    next->next = p_node;
-    p_node->next = nullptr; // clear reference that this node points to.
+    auto next = p_node->next;               // preserve reference to next element in sequence
+    auto tail = reverse_recursive(next);    // get last element in sequence and tail recurse.
+    next->next = p_node;                    // point next element to this element
+    p_node->next = nullptr;                 // clear reference that this node points to.
     return tail;
 }
 
 void reorder_students_recursive(linked_list<int>& input)
 {
-    int half_length = input.size/2; // find pivot of input
+    int half_length = input.size/2;                                 // find pivot of input
     cout << "Reversing elements after the "<< half_length <<"th element" << endl;
     auto current = input.head;
-    for (int i = 0; i < half_length - 1; ++i)
+    for (int i = 0; i < half_length - 1; ++i)                       // iterate through collection until we get to pivot element.
     {
         current = current->next;
     }
     cout << "Reversing elements after "<< current->value << endl;
-    current->next = reverse_recursive(current->next);
+    current->next = reverse_recursive(current->next);               // recursively reverse all elements after the pivot element
 }
 
 void reorder_students_iterative(linked_list<int>& input)

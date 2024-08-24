@@ -80,6 +80,12 @@ Compiler( 'Compiler-Clang14' )
 //TODO: setup xplat build definitions.
 .CompilerOptions = .CommonCompilerOptions
 
+// data structure library
+ObjectList( 'data_structures-Lib' )
+{
+    .CompilerInputPath = 'lib/data_structures/'
+    .CompilerOutputPath = 'out/lib/data_structures/'
+}
 
 // problem 0-6:
 ObjectList( 'problem_0_6-Lib' )
@@ -108,4 +114,4 @@ Executable( 'problem_1_4' )
 
 // All
 //------------------------------------------------------------------------------
-Alias( 'all' ) { .Targets = { 'problem_0_6', 'problem_1_4' } }
+Alias( 'all' ) { .Targets = { 'data_structures-Lib' 'problem_0_6', 'problem_1_4' } }

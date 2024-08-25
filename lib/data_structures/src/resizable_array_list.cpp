@@ -1,4 +1,7 @@
 #include "resizable_array_list.h"
+
+#include <algorithm>
+#include <cassert>
     
 template<typename T>
 resizable_array_list<T>::resizable_array_list()
@@ -8,8 +11,8 @@ resizable_array_list<T>::resizable_array_list()
 
 template<typename T>
 resizable_array_list<T>::resizable_array_list(
-    std::iterator<T,long, const T*,const T&> begin,
-    std::iterator<T, long, const T*, const T&> end)
+    std::iterator<T, unsigned long, const T*,const T&> begin,
+    std::iterator<T, unsigned long, const T*, const T&> end)
 {
     for (auto it = begin; it != end; ++it)
     {
@@ -20,26 +23,26 @@ resizable_array_list<T>::resizable_array_list(
 template<typename T>
 std::iterator<std::bidirectional_iterator_tag,
                 T,
-                long,
+                unsigned long,
                 const T*,
                 const T&> 
     resizable_array_list<T>::begin()
 {
     return std::iterator<std::bidirectional_iterator_tag,
-                T, long, const T*, const T&>
+                T, unsigned long, const T*, const T&>
                 (&storage[0]);
 }
 
 template<typename T>
 std::iterator<std::bidirectional_iterator_tag,
                 T,
-                long,
+                unsigned long,
                 const T*,
                 const T&> 
     resizable_array_list<T>::end()
 {
     return std::iterator<std::bidirectional_iterator_tag,
-                T, long, const T*, const T&>
+                T, unsigned long, const T*, const T&>
                 (&storage[item_count]);
 }
 
@@ -63,37 +66,37 @@ void resizable_array_list<T>::clear()
 
 
 template<typename T>
-int resizable_array_list<T>::count()
+unsigned long resizable_array_list<T>::count()
 {
     return item_count;
 }
 
 template<typename T>
-T& resizable_array_list<T>::operator[](int idx)
+T& resizable_array_list<T>::operator[](unsigned long idx)
 {
     return storage[idx];
 }
 
 template<typename T>
-const T& resizable_array_list<T>::operator[](int idx) const
+const T& resizable_array_list<T>::operator[](unsigned long idx) const
 {
     return storage[idx];
 }
 
 template<typename T>
-T& resizable_array_list<T>::get(int idx)
+T& resizable_array_list<T>::get(unsigned long idx)
 {
     return storage[idx];
 }
 
 template<typename T>
-void resizable_array_list<T>::set(int idx, T& val)
+void resizable_array_list<T>::set(unsigned long idx, T& val)
 {
     storage[idx] = val;
 }
 
 template<typename T>
-void resizable_array_list<T>::insert_at(int idx, T& val)
+void resizable_array_list<T>::insert_at(unsigned long idx, T& val)
 {
     assert(idx <= item_count);                      // if we try to insert past the current end of the list, throw an assert.
     if (item_count == storage_size)                 
@@ -105,10 +108,11 @@ void resizable_array_list<T>::insert_at(int idx, T& val)
         storage[i] = storage[i-1];              
     }
     storage[idx] = val;
+    item_count++;
 }
 
 template<typename T>
-void resizable_array_list<T>::delete_at(int idx, T& val)
+void resizable_array_list<T>::delete_at(unsigned long idx, T& val)
 {
     assert(idx < item_count);                      // if we try to insert past the current end of the list, throw an assert.
     for (auto i = idx; i < item_count - 1; ++i)    // O(n) shift left
@@ -116,12 +120,12 @@ void resizable_array_list<T>::delete_at(int idx, T& val)
         storage[i] = storage[i+1];
     }
     storage[idx] = val;
+    item_count--;
 }
 
 template<typename T>
 void resizable_array_list<T>::insert_first(T& val)
 {
-    
     if (item_count == storage_size)                 // special case, avoid multiple O(n) element copies by offsetting during the resize.
     {
         resize(storage_size * resize_factor, 1);
@@ -130,12 +134,13 @@ void resizable_array_list<T>::insert_first(T& val)
     } 
     else
     {
-        for(int i = item_count; i > 0; --i)         // O[n] right shift of all items in the collection.
+        for(unsigned long i = item_count; i > 0; --i)         // O[n] right shift of all items in the collection.
         {            
-            storage[i] = storage[i-1]
+            storage[i] = storage[i-1];
         }
     }
     storage[0] = val;
+    item_count++;
 }
 
 template<typename T>
@@ -152,17 +157,18 @@ void resizable_array_list<T>::insert_last(T& val)
 template<typename T>
 void resizable_array_list<T>::delete_first()
 {
-    for(int i = 0; i < item_count-1; ++i)           // O[n] left shift of all items in the collection.
+    for(unsigned long i = 0; i < item_count-1; ++i)           // O[n] left shift of all items in the collection.
     {          
-        storage[i] = storage[i+1]
+        storage[i] = storage[i+1];
     }
+    item_count--;
 }
 
 template<typename T>
 void resizable_array_list<T>::delete_last()
 {
     item_count--; // constant time delete
-    item_count = std::max(item_count, 0);
+    item_count = std::max(item_count, (unsigned long)0);
 }
 
 template<typename T>
@@ -172,10 +178,10 @@ void resizable_array_list<T>::resize()
 }
 
 template<typename T>
-void resizable_array_list<T>::resize(long new_item_count, long first_element_offset)
+void resizable_array_list<T>::resize(unsigned long new_item_count, unsigned long first_element_offset)
 {
     auto new_storage = new T[new_item_count];       // variable time, potentially costly allocaton.
-    for (auto i = 0; i < storage_size; ++i)         // O(n) copy into new space
+    for (auto i = 0; i < storage_size; ++i)         // O(n) copy unsigned longo new space
     {
         new_storage[i+first_element_offset] = storage[i];
     }

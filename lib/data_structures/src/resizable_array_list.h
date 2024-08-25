@@ -8,15 +8,15 @@ class resizable_array_list
 {
 public:
     resizable_array_list();
-    resizable_array_list(std::iterator<T, long, const T*, const T&> begin,
-                         std::iterator<T, long, const T*, const T&> end);
+    resizable_array_list(std::iterator<T, unsigned long, const T*, const T&> begin,
+                         std::iterator<T, unsigned long, const T*, const T&> end);
 
     std::iterator<std::bidirectional_iterator_tag,
-                T, long, const T*, const T&> 
+                T, unsigned long, const T*, const T&> 
                 begin();
     
     std::iterator<std::bidirectional_iterator_tag,
-                T, long, const T*, const T&> 
+                T, unsigned long, const T*, const T&> 
                 end();
     
     T& first();
@@ -24,16 +24,16 @@ public:
 
     void clear();
     
-    int count();
+    unsigned long count();
     
-    T& operator[](int idx);
-    const T& operator[](int idx) const;
+    T& operator[](unsigned long idx);
+    const T& operator[](unsigned long idx) const;
     
-    T& get(int idx);
-    void set(int idx, T& val);
+    T& get(unsigned long idx);
+    void set(unsigned long idx, T& val);
 
-    void insert_at(int idx, T& val);
-    void delete_at(int idx, T& val);
+    void insert_at(unsigned long idx, T& val);
+    void delete_at(unsigned long idx, T& val);
 
     void insert_first(T& val);
     void insert_last(T& val);
@@ -45,10 +45,10 @@ private:
     std::unique_ptr<T[]> storage;
     
     void resize();
-    void resize(long new_item_count, long first_element_offset);
+    void resize(unsigned long new_item_count, unsigned long first_element_offset);
 
-    long storage_size = 5;
-    const int resize_factor = 2;
-    long item_count = 0;
+    unsigned long storage_size = 5;
+    const unsigned long resize_factor = 2;
+    unsigned long item_count = 0;
     
 };

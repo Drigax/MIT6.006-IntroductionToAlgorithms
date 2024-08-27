@@ -112,14 +112,13 @@ void resizable_array_list<T>::insert_at(unsigned long idx, T& val)
 }
 
 template<typename T>
-void resizable_array_list<T>::delete_at(unsigned long idx, T& val)
+void resizable_array_list<T>::delete_at(unsigned long idx)
 {
     assert(idx < item_count);                      // if we try to insert past the current end of the list, throw an assert.
     for (auto i = idx; i < item_count - 1; ++i)    // O(n) shift left
     {
         storage[i] = storage[i+1];
     }
-    storage[idx] = val;
     item_count--;
 }
 
@@ -170,6 +169,13 @@ void resizable_array_list<T>::delete_last()
     item_count--; // constant time delete
     item_count = std::max(item_count, (unsigned long)0);
 }
+
+template<typename T>
+bool resizable_array_list<T>::is_empty()
+{
+    return item_count > 0;
+}
+
 
 template<typename T>
 void resizable_array_list<T>::resize()

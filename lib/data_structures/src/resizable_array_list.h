@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iterator>
 #include <memory>
 
@@ -33,13 +35,15 @@ public:
     void set(unsigned long idx, T& val);
 
     void insert_at(unsigned long idx, T& val);
-    void delete_at(unsigned long idx, T& val);
+    void delete_at(unsigned long idx);
 
     void insert_first(T& val);
     void insert_last(T& val);
 
     void delete_first();
     void delete_last();
+
+    bool is_empty();
     
 private:
     std::unique_ptr<T[]> storage;

@@ -83,8 +83,29 @@ Compiler( 'Compiler-Clang14' )
 // data structure library
 ObjectList( 'data_structures-Lib' )
 {
-    .CompilerInputPath = 'lib/data_structures/'
+    .CompilerInputPath = 'lib/data_structures/src'
     .CompilerOutputPath = 'out/lib/data_structures/'
+}
+
+.GoogleTestLibraryLocation      = './include/googletest/build/lib'
+.GoogleTestIncludeLocation      = './include/googletest/googletest/include'
+// data structure library
+ObjectList( 'data_structures-test-Lib' )
+{
+    .CompilerInputPath  = 'lib/data_structures/test'
+    .CompilerOutputPath = 'out/lib/data_structures/test'
+
+    .CompilerOptions    + ' -I$GoogleTestIncludeLocation$'
+                        // TODO: we need to disable various warnings to compile including GoogleTest. Is there a better way?
+                        + ' -Wno-reserved-identifier' 
+                        + ' -Wno-vexing-parse' 
+    .LibPaths           = ' -L$GoogleTestLibraryLocation$'
+}
+
+Executable ( 'data_structures-test' )
+{
+    .Libraries          = { "data_structures-test-Lib" }
+    .LinkerOutput       = 'out/lib/data_structures/test/data_structures-test'
 }
 
 // problem 0-6:
@@ -101,6 +122,7 @@ ObjectList( 'problem_1_4-Lib' )
 }
 
 Executable( 'problem_0_6' )
+
 {
     .Libraries          = { "problem_0_6-Lib" }
     .LinkerOutput       = 'out/bin/problem_0_6'
@@ -114,4 +136,4 @@ Executable( 'problem_1_4' )
 
 // All
 //------------------------------------------------------------------------------
-Alias( 'all' ) { .Targets = { 'data_structures-Lib' 'problem_0_6', 'problem_1_4' } }
+Alias( 'all' ) { .Targets = { 'data_structures-test' 'problem_0_6', 'problem_1_4' } }

@@ -87,8 +87,11 @@ ObjectList( 'data_structures-Lib' )
     .CompilerOutputPath = 'out/lib/data_structures/'
 }
 
-.GoogleTestLibraryLocation      = './include/googletest/build/lib'
-.GoogleTestIncludeLocation      = './include/googletest/googletest/include'
+//TODO: we currently need to invoke CMAKE before this build to build gtest, this may cause issues when building release/ASAN, etc... builds
+.GoogleTestLibraryLocation      = 'include/googletest/build/lib'
+.GoogleTestMainLibrary          = 'libgtest_main.a'
+.GoogleTestLibrary              = 'libgtest.a'
+.GoogleTestIncludeLocation      = 'include/googletest/googletest/include'
 // data structure library
 ObjectList( 'data_structures-test-Lib' )
 {
@@ -96,15 +99,18 @@ ObjectList( 'data_structures-test-Lib' )
     .CompilerOutputPath = 'out/lib/data_structures/test'
 
     .CompilerOptions    + ' -I$GoogleTestIncludeLocation$'
-                        // TODO: we need to disable various warnings to compile including GoogleTest. Is there a better way?
+                        // TODO: we need to disable various warnings to include GoogleTest. Is there a better way?
                         + ' -Wno-reserved-identifier' 
-                        + ' -Wno-vexing-parse' 
-    .LibPaths           = ' -L$GoogleTestLibraryLocation$'
+                        + ' -Wno-vexing-parse'
 }
 
 Executable ( 'data_structures-test' )
 {
     .Libraries          = { "data_structures-test-Lib" }
+
+    .LibPaths           = ' $GoogleTestLibraryLocation$/$GoogleTestMainLibrary$'
+                        + ' $GoogleTestLibraryLocation$/$GoogleTestLibrary$'
+    .LinkerOptions      + .LibPaths
     .LinkerOutput       = 'out/lib/data_structures/test/data_structures-test'
 }
 

@@ -162,3 +162,8 @@ TEST(resizable_array_list_test, resize_preserves_item_order)
     }
 }
 
+TEST(resizable_array_list_test, should_fail)
+{
+    ASSERT_TRUE(false);
+}
+

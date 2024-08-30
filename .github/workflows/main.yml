@@ -46,7 +46,3 @@ jobs:
         name: Upload Build Artifacts
         path: ./out
         if-no-files-found: error
-
-  test:
-
-    

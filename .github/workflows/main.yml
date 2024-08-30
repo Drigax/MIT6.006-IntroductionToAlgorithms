@@ -13,5 +13,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: run build script
-      run: ./build.sh
+    - name: Install Build Dependencies
+      run:  sudo apt update;
+            sudo apt install -y cmake clang;
+            wget https://www.fastbuild.org/downloads/v1.13/FASTBuild-Linux-x64-v1.13.zip;
+            unzip ./FASTBuild-Linux-x64-v1.13.zip -d /usr/local/bin;
+            chmod +x /usr/local/bin/fbuild;
+    
+    - name: Run Build Script
+      run: ./build.sh;
+    
+    - name: Cleanup Build Intermediates
+      run: find ./out -name '*.o*' | xargs rm
+
+    - name: Run Data Structure Library Regression Tests
+      run: ./out/lib/data_structures/test/data_structures-test --gtest_output=xml:./out/lib/data_structures/test/test_detail.xml; # outputs to test_detail.xml
+    
+    - name: Test Summary
+      uses: test-summary/action@v2
+      with:
+        paths: "out/**/test_*.xml"
+      if: always()
+
+    - name: Cleanup Test Artifacts
+      run: find ./out -name 'test_*.xml*' | xargs rm
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Upload Build Artifacts
+        path: ./out
+        if-no-files-found: error
+    

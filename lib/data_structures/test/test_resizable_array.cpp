@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <vector>
-#include <gtest/gtest.h>
 #include <random>
+
+#include "gtest/gtest.h"
 
 TEST(resizable_array_list_test, is_initially_empty)
 {

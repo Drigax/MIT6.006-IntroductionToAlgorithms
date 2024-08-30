@@ -16,15 +16,6 @@ public:
         storage = std::make_unique<T[]>(this->storage_size);
     }
 
-    resizable_array_list(std::iterator<T, unsigned long, const T*, const T&> begin,
-                         std::iterator<T, unsigned long, const T*, const T&> end)
-    {
-        for (auto it = begin; it != end; ++it)
-        {
-            insert_last(*it);
-        }
-    }
-
     std::iterator<std::bidirectional_iterator_tag,
                 T, unsigned long, const T*, const T&> 
                 begin()
@@ -51,7 +42,7 @@ public:
 
     T& last()
     {
-        return storage[item_count];
+        return storage[item_count-1];
     }
 
     void clear()
@@ -84,12 +75,12 @@ public:
         return storage[idx];
     }
 
-    void set(unsigned long idx, T& val)
+    void set(unsigned long idx, T val)
     {
         storage[idx] = val;
     }
 
-    void insert_at(unsigned long idx, T& val)
+    void insert_at(unsigned long idx, T val)
     {
         assert(idx <= item_count);                      // if we try to insert past the current end of the list, throw an assert.
         if (item_count == storage_size)                 
@@ -114,7 +105,7 @@ public:
         item_count--;
     }
 
-    void insert_first(T& val)
+    void insert_first(T val)
     {
         if (item_count == storage_size)                 // special case, avoid multiple O(n) element copies by offsetting during the resize.
         {
@@ -133,7 +124,7 @@ public:
         item_count++;
     }
 
-    void insert_last(T& val)
+    void insert_last(T val)
     {
         if (item_count == storage_size)
         {

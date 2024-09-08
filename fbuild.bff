@@ -128,7 +128,6 @@ ObjectList( 'problem_1_4-Lib' )
 }
 
 Executable( 'problem_0_6' )
-
 {
     .Libraries          = { "problem_0_6-Lib" }
     .LinkerOutput       = 'out/bin/problem_0_6'

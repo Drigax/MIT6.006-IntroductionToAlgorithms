@@ -11,28 +11,26 @@ template<typename T>
 class resizable_array_list
 {
 public:
+    template <typename U>
+    struct resizable_array_list_iterator;
+
+
+    typedef resizable_array_list_iterator<T> iterator;
+
     resizable_array_list()
     {
         storage = std::make_unique<T[]>(this->storage_size);
     }
 
-    std::iterator<std::bidirectional_iterator_tag,
-                T, unsigned long, const T*, const T&> 
-                begin()
+    iterator begin()
     {
-        return std::iterator<std::bidirectional_iterator_tag,
-                    T, unsigned long, const T*, const T&>
-                    (&storage[0]);
+        return iterator(&storage[0]);
     }
 
     
-    std::iterator<std::bidirectional_iterator_tag,
-                T, unsigned long, const T*, const T&> 
-                end()
+    iterator end()
     {
-        return std::iterator<std::bidirectional_iterator_tag,
-                    T, unsigned long, const T*, const T&>
-                    (&storage[item_count]);
+        return iterator(&storage[item_count]);
     }
     
     T& first()
@@ -183,5 +181,25 @@ private:
     unsigned long storage_size = 5;
     const unsigned long resize_factor = 2;
     unsigned long item_count = 0;
-    
+
+public:
+    template <typename U>
+    struct resizable_array_list_iterator
+    {
+        using iterator_category = std::random_access_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = U;
+        using pointer = value_type*;
+        using reference = value_type&;
+
+        explicit resizable_array_list_iterator (pointer ptr) : m_ptr(ptr){}
+        reference operator*() { return *m_ptr; }
+        resizable_array_list_iterator& operator++() { m_ptr++; return *this; }
+        resizable_array_list_iterator& operator--() { m_ptr--; return *this; }
+        pointer operator->() { return m_ptr; }
+        bool operator==(const resizable_array_list_iterator& other) { return m_ptr == other.m_ptr; }
+        bool operator!=(const resizable_array_list_iterator& other) { return m_ptr != other.m_ptr; }
+    private:
+        U* m_ptr;
+    }; 
 };
